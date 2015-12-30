@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Messages : Create</title>
+    <script src="u2f-api.js"></script>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+var requestData = /*[[${data}]]*/ '';
+var request = JSON.parse(requestData);
+setTimeout(function() {
+    u2f.sign(request.authenticateRequests,
+    function(data) {
+        if(data.errorCode) {
+            alert("U2F failed with error code: " + data.errorCode);
+            return;
+        }
+        document.getElementById('tokenResponse').value = JSON.stringify(data);
+        document.getElementById('form').submit();
+    });
+}, 1000);
+/*]]>*/
+</script>
+  </head>
+  <body>
+    <p>Touch your U2F token to authenticate.</p>
+        <form method="post" action="./authenticate" id="form">
+            <input type="hidden" name="tokenResponse" id="tokenResponse"/>
+        </form>
+    </body>
+</html>
